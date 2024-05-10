@@ -1,0 +1,137 @@
+h1, h2, h3, h4, h5, h6, p {
+    margin-bottom: 0;
+}
+
+.glow-card {
+    transition: box-shadow 0.3s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* initial subtle shadow */
+}
+
+.glow-card:hover {
+    box-shadow: 0 0 15px rgba(81, 203, 238, 1); /* glowing shadow effect */
+}
+
+.navbar-container {
+    /* max-width: 1200px; */
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* .logo img {
+    width: 150px;
+  } */
+
+.navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #555;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    color: #555;
+}
+
+.search {
+    position: relative;
+}
+
+.search input[type="text"] {
+    padding: 10px 30px 10px 10px;
+    /* Tambahkan padding kiri untuk ruang ikon */
+    border: none;
+    border-radius: 5px;
+    width: 250px;
+    /* Lebar field search */
+}
+
+.search button {
+    position: absolute;
+    right: 10px;
+    /* Atur posisi ikon */
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 8px;
+    border: none;
+    background-color: transparent;
+    color: #555;
+    cursor: pointer;
+}
+
+.search button:hover {
+    color: #333;
+}
+
+.user button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+}
+
+.user button:hover {
+    background-color: #555;
+}
+
+
+.user {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.login-btn,
+.signup-btn {
+    padding: 10px 20px;
+    margin-left: 10px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #555;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 20px 0;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Add margin to footer content to avoid overlapping with body content */
+footer .container {
+    margin-bottom: 20px;
+}
