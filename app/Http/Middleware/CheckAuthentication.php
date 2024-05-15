@@ -16,7 +16,8 @@ class CheckAuthentication
     public function handle(Request $request, Closure $next)
     {
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->back()->with('success', 'Please login first!');
+            // return redirect()->route('home');
         }
 
         return $next($request);

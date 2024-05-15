@@ -1,57 +1,83 @@
-<header>
-    {{-- @auth --}}
-    {{-- @if (Auth::user()->role == 'admin') --}}
-    <div class="shadow-sm navbar">
-        <a class="logo" href="/" style="text-decoration:none; cursor: pointer">
-            <img src="logo.png" alt="ExistAuto">
-        </a>
-        <nav>
-            <ul>
-              <li><a href="/mobil/beli">Buy Car</a></li>
-              <li><a href="/mobil/jual">Sell Car</a></li>
-              <li><a href="/forum">Forums</a></li>
-              <li><a href="/">FAQ</a></li>
-            </ul>
-        </nav>
-        <div class="search rounded border">
-            <input class="filtered" type="text" placeholder="Cari mobil...">
-            <button type="submit"><i class="fas fa-search"></i></button>
+<style>
+    .form-inline input[type="search"]:focus {
+        outline: none;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+</style>
+
+<header class="w-100">
+    <div class="row shadow-sm navbar">
+        <div class="col-2">
+            <a class="logo" href="/" style="text-decoration:none; cursor: pointer">
+                <img src="logo.png" alt="ExistAuto">
+            </a>
         </div>
-        @if (Auth::check())
-            <ul>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
-                            alt="User Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
-                        {{ Auth::user()->name }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink"
-                        style="width:100%">
-                        <a class="dropdown-item rounded" href="{{ url('/profile') }}"
-                            style="display: block; width:100%">Profile</a>
-
-                        {{-- <hr class="dropdown-divider"> --}}
-
-
-                        <a class="dropdown-item rounded" href="{{ route('logout') }}" style="display: block; width:100%"
-                            onclick="event.preventDefault();
-                     document.getElementById('logout-form').submit();">
-                            Logout
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+        <div class="col-4">
+            <nav>
+                <ul>
+                    <li><a href="{{ route('car.buy.view') }}">Buy Car</a></li>
+                    <li><a href="{{ route('car.sell.view') }}">Sell Car</a></li>
+                    <li><a href="{{ route('forums') }}">Forums</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-4 d-flex justify-content-between">
+            <nav>
+                <ul>
+                    <li>
+                        <form class="form-inline border rounded mb-0" method="GET"
+                            action="{{ route('car.buy.view') }}">
                             @csrf
+                            <input class="form-control mr-sm-2 border-white" type="search" placeholder="Search"
+                                aria-label="Search" name="search">
+                            <button class="btn" type=""><i style="color: #555;"
+                                    class="fas fa-search"></i></button>
                         </form>
+                    </li>
+                </ul>
+            </nav>
+        </div>
 
-                    </ul>
-                </li>
-            </ul>
-        @else
-            <div class="user">
-                <a class="login-btn" data-bs-toggle="modal" data-bs-target="#authModal"
-                    style="text-decoration: none; cursor: pointer;">Login/Sign Up</a>
-            </div>
-        @endif
+        <div class="col-2 d-flex justify-content-center align-items-center">
+            @if (Auth::check())
+                <ul>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ Auth::user()->name }}
+                            <img src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp"
+                                alt="User Avatar" style="width: 40px; height: 40px; border-radius: 50%;">
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink"
+                            style="width:100%">
+                            @if (Auth::user()->role === 'ADMIN')
+                                <a class="dropdown-item rounded text-center" href="{{ url('/admin') }}"
+                                    style="display: block; width:100%">Dashboard</a>
+                            @else
+                                <a class="dropdown-item rounded text-center" href="{{ url('/mycars') }}"
+                                    style="display: block; width:100%">My Cars</a>
+                            @endif
+                            <a class="dropdown-item rounded text-center" href="{{ route('logout') }}"
+                                style="display: block; width:100%"
+                                onclick="event.preventDefault();
+                     document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+
+                        </ul>
+                    </li>
+                </ul>
+            @else
+                <div class="user">
+                    <a class="login-btn" data-bs-toggle="modal" data-bs-target="#authModal"
+                        style="text-decoration: none; cursor: pointer;">Login/Sign Up</a>
+                </div>
+            @endif
+        </div>
     </div>
 
     <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">

@@ -7,7 +7,8 @@
     .filter-sidebar {
         z-index: 3;
         overflow-x: hidden;
-        overflow-y: visible; /* Default, allows overflow vertically but won't scroll */
+        overflow-y: visible;
+        /* Default, allows overflow vertically but won't scroll */
 
         /* Ensure this is higher than the overlay's z-index */
         position: fixed;
@@ -240,66 +241,58 @@
     }
 </style>
 
-{{-- <div class="filter-sidebar border" id="filterSidebar"> --}}
 <div class="vh-100 d-flex flex-column justify-content-center filter-sidebar border" id="filterSidebar">
-
     <div class="row justify-content-center p-2 align-items-center border-bottom" style="z-index: 1051;">
         <p class="font-weight-bold">All Filters</p>
     </div>
-    <form class=" px-4 form-filter">
-        <label for="brand">Merek</label>
+    <form class="px-4 form-filter" method="GET" action="{{ route('car.buy.view') }}">
+        @csrf
+        <label for="brand">Brand</label>
         <select class="form-control" id="brand" name="brand">
-            {{-- get from db --}}
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="mazda">Mazda</option>
-            <option value="wuling">Wuling</option>
+            <option value="">Brand</option>
+            @foreach ($carBrands as $brands)
+                <option value="{{ $brands->id }}">{{ $brands->brand }}</option>
+            @endforeach
         </select>
-        <label for="brand">Model</label>
-        <select class="form-control" id="brand" name="brand">
-            {{-- get from db --}}
-            <option value="toyota">Toyota</option>
-            <option value="honda">Honda</option>
-            <option value="mazda">Mazda</option>
-            <option value="wuling">Wuling</option>
+        <label for="model">Model</label>
+        <select class="form-control" id="model" name="model">
+            <option value="">Model</option>
+            @foreach ($carModels as $models)
+                <option value="{{ $models->id }}">{{ $models->model }}</option>
+            @endforeach
         </select>
-        <label for="model_type">Tipe</label>
-        <select class="form-control" id="model_type" name="model_type">
-            {{-- get from db --}}
-            <option value="suv">SUV</option>
-            <option value="sedan">Sedan</option>
-            <option value="hatchback">Hatchback</option>
-            <option value="van">Van</option>
+        <label for="type">Tipe</label>
+        <select class="form-control" id="type" name="type">
+            <option value="">Type</option>
+            @foreach ($carTypes as $types)
+                <option value="{{ $types->id }}">{{ $types->type }}</option>
+            @endforeach
         </select>
-        <label for="year">Tahun</label>
-        <select class="form-control" id="year" name="year">
-            {{-- get from db --}}
-            <option value="2024">2024</option>
-            <option value="2023">2023</option>
-            <option value="2022">2022</option>
-        </select>
-        <label for="transmission">Transmisi</label>
+        <label for="transmission">Transmission</label>
         <select class="form-control" id="transmission" name="transmission">
+            <option value="">Transmission</option>
             <option value="manual">Manual</option>
-            <option value="automatic">Otomatis</option>
+            <option value="automatic">Automatic</option>
         </select>
-        <label for="color">Warna</label>
+        <label for="color">Color</label>
         <select class="form-control" id="color" name="color">
+            <option value="">Color</option>
             <option value="hitam">Hitam</option>
             <option value="putih">Putih</option>
             <option value="merah">Merah</option>
             <option value="biru">Biru</option>
-            <!-- Tambahkan opsi warna lainnya sesuai kebutuhan -->
         </select>
-        <label for="location">Lokasi</label>
+        <label for="location">Location</label>
         <select class="form-control" id="location" name="location">
+            <option value="">Location</option>
             <option value="jakarta">Jakarta</option>
             <option value="bogor">Bogor</option>
             <option value="tangerang">Tangerang</option>
             <option value="depok">Depok</option>
-            <!-- Tambahkan opsi lokasi lainnya sesuai kebutuhan -->
         </select>
         <label for="yearRange">Tahun</label>
+        <input type="hidden" name="yearMin" id="yearMin" value="">
+        <input type="hidden" name="yearMax" id="yearMax" value="">
         <div class="slider-container" style="margin: 0">
             <div class="input-min-max" style="margin: 0">
                 <input class="form-control" type="text" id="yearMinText" readonly>
@@ -313,6 +306,7 @@
             <button type="submit" class="btn btn-success m-3 col">Apply Filters</button>
             <button type="submit" class="btn btn-danger m-3 col">Reset</button>
         </div>
+        
     </form>
 </div>
 <div id="overlay" style="display: none;"></div>
@@ -348,6 +342,9 @@
         var inputMin = document.getElementById('yearMinText');
         var inputMax = document.getElementById('yearMaxText');
 
+        var yearMin = document.getElementById('yearMin');
+        var yearMax = document.getElementById('yearMax');
+
         noUiSlider.create(slider, {
             start: [2000, 2024],
             connect: true,
@@ -361,8 +358,17 @@
         slider.noUiSlider.on('update', function(values, handle) {
             if (handle) {
                 inputMax.value = parseInt(values[handle]); // Convert to integer, remove decimal
+                yearMax.value = parseInt(values[handle]); // Convert to integer, remove decimal
             } else {
                 inputMin.value = parseInt(values[handle]); // Convert to integer, remove decimal
+                yearMin.value = parseInt(values[handle]); // Convert to integer, remove decimal
+            }
+        });
+        slider.noUiSlider.on('update', function(values, handle) {
+            if (handle) {
+                document.getElementById('yearMax').value = parseInt(values[handle]);
+            } else {
+                document.getElementById('yearMin').value = parseInt(values[handle]);
             }
         });
     });

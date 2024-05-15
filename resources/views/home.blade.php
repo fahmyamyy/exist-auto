@@ -1,13 +1,6 @@
 <style>
-    /* .carousel-item img {
-        width: auto;
-        height: auto;
-        max-height: 600px
-    } */
-
     .carousel-item {
         height: 500px;
-        /* Adjust this value based on your preference */
         transition: transform 0.5s ease;
     }
 
@@ -26,7 +19,6 @@
 
 @extends('components.layout')
 @section('content')
-
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="max-height:800px">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -65,154 +57,90 @@
 
         <div id="carouselExampleIndicator2" class="carousel slide" data-ride="carousel" style="max-height:600px">
             <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div style="display: flex; justify-content: space-between;" class="container">
-                        <div class="card shadow" style="width: 20rem;">
-                            <a href="">
-                                <img class="card-img-top"
-                                    src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg"
-                                    alt="Card image cap">
-                            </a>
-                            <ul class="list-group list-group-flush">
-                                <div class="p-4">
-                                    <a href="#" style="text-decoration: none; cursor: pointer; color: black;">
-                                        <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">Mercedes-Benz</h4>
-                                        <p style="font-size: 10pt" class="card-text text-secondary text-left">24.000KM•Manual•Jakarta
-                                        </p>
-                                    </a>
-                                    <div class="mt-4" style="display: flex; justify-content: space-between;">
-                                        <p class="text-left text-danger font-weight-bold">Rp. 150.000.000</p>
-                                        <p style="font-size: 10pt; margin-left: auto;">Rp. 6,4 Juta/Bulan</p>
-                                    </div>
-                                    <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp. 150.000.000 (Cash)
-                                    </p>
-                                </div>
-                                <a href="#" class="m-4 mt-1 btn btn-danger">Buy Now</a>
-                            </ul>
-                        </div>
+                @php
+                    $totalCards = 9;
+                    $cardsPerSlide = 3;
+                    $allItems = $carData->all();
+                    $placeholdersNeeded = $totalCards - count($allItems);
 
-                        <div class="card shadow" style="width: 20rem;">
-                            <a href="">
-                                <img class="card-img-top"
-                                    src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg"
-                                    alt="Card image cap">
-                            </a>
-                            <ul class="list-group list-group-flush">
-                                <div class="p-4">
-                                    <a href="#" style="text-decoration: none; cursor: pointer; color: black;">
-                                        <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">Mercedes-Benz</h4>
-                                        <p style="font-size: 10pt" class="card-text text-secondary text-left">24.000KM•Manual•Jakarta
-                                        </p>
-                                    </a>
-                                    <div class="mt-4" style="display: flex; justify-content: space-between;">
-                                        <p class="text-left text-danger font-weight-bold">Rp. 150.000.000</p>
-                                        <p style="font-size: 10pt; margin-left: auto;">Rp. 6,4 Juta/Bulan</p>
+                    for ($i = 0; $i < $placeholdersNeeded; $i++) {
+                        $allItems[] = null;
+                    }
+
+                    $chunks = array_chunk($allItems, $cardsPerSlide);
+                @endphp
+
+                @foreach ($chunks as $index => $chunk)
+                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                        <div style="display: flex; justify-content: space-around;" class="container">
+                            @foreach ($chunk as $car)
+                                @if ($car)
+                                    <div class="card shadow-sm" style="width: 20rem;">
+                                        <a href="{{ route('car.detail', ['carId' => $car->id]) }}">
+                                            <img style="max-height: 212px" class="card-img-top"
+                                                src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg"
+                                                alt="Card image cap">
+                                        </a>
+                                        <ul class="list-group list-group-flush">
+                                            <div class="p-4">
+                                                <a href="{{ route('car.detail', ['carId' => $car->id]) }}"
+                                                    style="text-decoration: none; cursor: pointer; color: black;">
+                                                    <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">
+                                                        {{ $car->carModel->carBrand->brand }}
+                                                        {{ $car->carModel->model }} {{ $car->year }}</h4>
+                                                    <p style="font-size: 10pt" class="card-text text-secondary text-left">
+                                                        {{ $car->mileage }} KM • {{ $car->transmission }} •
+                                                        {{ $car->location }}
+                                                    </p>
+                                                </a>
+                                                <div class="mt-4" style="display: flex; justify-content: space-between;">
+                                                    <p class="text-left text-danger font-weight-bold">
+                                                        {{ $car->price_credit }}</p>
+                                                    <p style="font-size: 10pt; margin-left: auto;">
+                                                        {{ $car->price_installment }}</p>
+                                                </div>
+                                                <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">
+                                                    {{ $car->price_cash }} (Cash)
+                                                </p>
+                                            </div>
+                                            <a href="{{ route('checkout.view', ['carId' => $car->id]) }}"
+                                                class="m-4 mt-1 btn btn-danger">Buy
+                                                Now</a>
+                                        </ul>
                                     </div>
-                                    <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp. 150.000.000 (Cash)
-                                    </p>
-                                </div>
-                                <a href="#" class="m-4 mt-1 btn btn-danger">Buy Now</a>
-                            </ul>
-                        </div>
-                        <div class="card shadow" style="width: 20rem;">
-                            <a href="">
-                                <img class="card-img-top"
-                                    src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg"
-                                    alt="Card image cap">
-                            </a>
-                            <ul class="list-group list-group-flush">
-                                <div class="p-4">
-                                    <a href="#" style="text-decoration: none; cursor: pointer; color: black;">
-                                        <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">Mercedes-Benz</h4>
-                                        <p style="font-size: 10pt" class="card-text text-secondary text-left">24.000KM•Manual•Jakarta
-                                        </p>
-                                    </a>
-                                    <div class="mt-4" style="display: flex; justify-content: space-between;">
-                                        <p class="text-left text-danger font-weight-bold">Rp. 150.000.000</p>
-                                        <p style="font-size: 10pt; margin-left: auto;">Rp. 6,4 Juta/Bulan</p>
+                                @else
+                                    <div class="card shadow-sm" style="width: 20rem;">
+                                        <a href="">
+                                            <img style="max-height: 212px" class="card-img-top" {{-- src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg" --}}
+                                                src="https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510"
+                                                alt="Card image cap">
+                                        </a>
+                                        <ul class="list-group list-group-flush">
+                                            <div class="p-4">
+                                                <a href="#"
+                                                    style="text-decoration: none; cursor: pointer; color: black;">
+                                                    <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">
+                                                        FOR SALE</h4>
+                                                    <p style="font-size: 10pt" class="card-text text-secondary text-left">
+                                                        XXX.XXX KM • Location • Transmission</p>
+                                                </a>
+                                                <div class="mt-4" style="display: flex; justify-content: space-between;">
+                                                    <p class="text-left text-danger font-weight-bold">Rp. XXX.XXX.XXX</p>
+                                                    <p style="font-size: 10pt; margin-left: auto;">Rp. X,X Juta/Bulan</p>
+                                                </div>
+                                                <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp.
+                                                    XXX.XXX.XXX (Cash)
+                                                </p>
+                                            </div>
+                                            <a href="#" onclick="event.preventDefault();"
+                                                class="m-4 mt-1 btn btn-danger">Buy Now</a>
+                                        </ul>
                                     </div>
-                                    <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp. 150.000.000 (Cash)
-                                    </p>
-                                </div>
-                                <a href="#" class="m-4 mt-1 btn btn-danger">Buy Now</a>
-                            </ul>
+                                @endif
+                            @endforeach
                         </div>
                     </div>
-                </div>
-                <div class="carousel-item">
-                    <div style="display: flex; justify-content: space-between;" class="container">
-                        <div class="card shadow" style="width: 20rem;">
-                            <a href="">
-                                <img class="card-img-top"
-                                    src="https://car-images.bauersecure.com/wp-images/4738/should_i_buy_an_electric_car.jpg"
-                                    alt="Card image cap">
-                            </a>
-                            <ul class="list-group list-group-flush">
-                                <div class="p-4">
-                                    <a href="#" style="text-decoration: none; cursor: pointer; color: black;">
-                                        <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">Mercedes-Benz</h4>
-                                        <p style="font-size: 10pt" class="card-text text-secondary text-left">24.000KM•Manual•Jakarta
-                                        </p>
-                                    </a>
-                                    <div class="mt-4" style="display: flex; justify-content: space-between;">
-                                        <p class="text-left text-danger font-weight-bold">Rp. 150.000.000</p>
-                                        <p style="font-size: 10pt; margin-left: auto;">Rp. 6,4 Juta/Bulan</p>
-                                    </div>
-                                    <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp. 150.000.000 (Cash)
-                                    </p>
-                                </div>
-                                <a href="#" class="m-4 mt-1 btn btn-danger">Buy Now</a>
-                            </ul>
-                        </div>
-
-                        <div class="card shadow" style="width: 20rem;">
-                            <a href="">
-                                <img class="card-img-top"
-                                    src="https://car-images.bauersecure.com/wp-images/4738/should_i_buy_an_electric_car.jpg"
-                                    alt="Card image cap">
-                            </a>
-                            <ul class="list-group list-group-flush">
-                                <div class="p-4">
-                                    <a href="#" style="text-decoration: none; cursor: pointer; color: black;">
-                                        <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">Mercedes-Benz</h4>
-                                        <p style="font-size: 10pt" class="card-text text-secondary text-left">24.000KM•Manual•Jakarta
-                                        </p>
-                                    </a>
-                                    <div class="mt-4" style="display: flex; justify-content: space-between;">
-                                        <p class="text-left text-danger font-weight-bold">Rp. 150.000.000</p>
-                                        <p style="font-size: 10pt; margin-left: auto;">Rp. 6,4 Juta/Bulan</p>
-                                    </div>
-                                    <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp. 150.000.000 (Cash)
-                                    </p>
-                                </div>
-                                <a href="#" class="m-4 mt-1 btn btn-danger">Buy Now</a>
-                            </ul>
-                        </div>
-                        <div class="card shadow" style="width: 20rem;">
-                            <a href="">
-                                <img class="card-img-top"
-                                    src="https://car-images.bauersecure.com/wp-images/4738/should_i_buy_an_electric_car.jpg"
-                                    alt="Card image cap">
-                            </a>
-                            <ul class="list-group list-group-flush">
-                                <div class="p-4">
-                                    <a href="#" style="text-decoration: none; cursor: pointer; color: black;">
-                                        <h4 style="margin-bottom: 0px" class="card-title text-left text-bold">Mercedes-Benz</h4>
-                                        <p style="font-size: 10pt" class="card-text text-secondary text-left">24.000KM•Manual•Jakarta
-                                        </p>
-                                    </a>
-                                    <div class="mt-4" style="display: flex; justify-content: space-between;">
-                                        <p class="text-left text-danger font-weight-bold">Rp. 150.000.000</p>
-                                        <p style="font-size: 10pt; margin-left: auto;">Rp. 6,4 Juta/Bulan</p>
-                                    </div>
-                                    <p style="font-size: 10pt; margin-bottom:0px;" class="text-left">Rp. 150.000.000 (Cash)
-                                    </p>
-                                </div>
-                                <a href="#" class="m-4 mt-1 btn btn-danger">Buy Now</a>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
             <a class="carousel-control-prev" href="#carouselExampleIndicator2" role="button" data-slide="prev"
                 style="filter: invert(100%);">
@@ -223,43 +151,50 @@
                 <span class="carousel-control-next-icon"></span>
             </a>
         </div>
-        {{-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque nemo excepturi error est architecto aperiam sunt
-            similique incidunt temporibus! Magnam velit nobis sint error, qui doloribus? Consequuntur maiores similique
-            praesentium!</p> --}}
     </div>
 
-    <div class="alert alert-dark">
-        <div class="mx-auto text-center mt-4">
+    <div class="alert alert-dark pb-4">
+        <div class="mx-auto text-center my-3">
             <h1>Latest Blog</h1>
         </div>
         <div class="container">
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-secondary">Go somewhere</a>
+            @if ($forumData && $forumData->count() > 0)
+                @foreach ($forumData as $forum)
+                    <div class="card" style="width: 18rem;">
+                        <a href="{{ route('forum.detail', ['forumId' => $forum->id]) }}" class="card-body"
+                            style="text-decoration: none; cursor: pointer; color: black;">
+                            <h5 class="card-title font-weight-bold">{{ $forum->title }}</h5>
+                            <p class="card-text">{{ $forum->content }}</p>
+                        </a>
+                    </div>
+                @endforeach
+            @else
+                <div class="card" style="width: 18rem;">
+                    <a href="#" onclick="event.preventDefault();" class="card-body"
+                        style="text-decoration: none; cursor: pointer; color: black;">
+                        <h5 class="card-title font-weight-bold">Forum Title</h5>
+                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus minus asperiores esse tenetur sint iusto debitis vitae.</p>
+                    </a>
                 </div>
-            </div>
-
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-secondary">Go somewhere</a>
+                <div class="card" style="width: 18rem;">
+                    <a href="#" onclick="event.preventDefault();" class="card-body"
+                        style="text-decoration: none; cursor: pointer; color: black;">
+                        <h5 class="card-title font-weight-bold">Forum Title</h5>
+                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus minus asperiores esse tenetur sint iusto debitis vitae.</p>
+                    </a>
                 </div>
-            </div>
-
-            <div class="card" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-secondary">Go somewhere</a>
+                <div class="card" style="width: 18rem;">
+                    <a href="#" onclick="event.preventDefault();" class="card-body"
+                        style="text-decoration: none; cursor: pointer; color: black;">
+                        <h5 class="card-title font-weight-bold">Forum Title</h5>
+                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus minus asperiores esse tenetur sint iusto debitis vitae.</p>
+                    </a>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 
-    <div class="">
+    <div class="my-5">
         <div class="mx-auto text-center">
             <h1>Our Happy Clients</h1>
         </div>
@@ -288,18 +223,18 @@
             </div>
         </div>
     </div>
-    <div class="w-100 container" style="background-image: url(https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510); background-size: cover; background-position: center; ">
-        <div class="w-100 accordion" id="accordionExample">
+    <div class="w-100 containers"
+        style="background-image: url(https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; height: 60vh;">
+        <div class="accordion w-100 p-5 m-5" id="accordionExample">
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h2 class="mb-0">
                         <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse"
                             data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            Collapsible Group Item #1
+                            FAQ #1
                         </button>
                     </h2>
                 </div>
-
                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
                     data-parent="#accordionExample">
                     <div class="card-body">
@@ -313,7 +248,7 @@
                     <h2 class="mb-0">
                         <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
                             data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            Collapsible Group Item #2
+                            FAQ #2
                         </button>
                     </h2>
                 </div>
@@ -328,7 +263,7 @@
                     <h2 class="mb-0">
                         <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse"
                             data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            Collapsible Group Item #3
+                            FAQ #3
                         </button>
                     </h2>
                 </div>
@@ -341,105 +276,4 @@
             </div>
         </div>
     </div>
-    {{-- style="background-image: url(https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510); background-size: cover; background-position: center; " --}}
-
-    {{-- <div class="alert alert-dark d-flex justify-content-center align-items-center"
-        style="background-image: url(https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510); background-size: cover; background-position: center; ">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <img src="https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510"
-                        class="img-fluid" alt="Image">
-                </div>
-                <div class="accordion" id="accordionExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Accordion Item #1
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <strong>This is the first item's accordion body.</strong> It is shown by default, until the
-                                collapse plugin adds the appropriate classes that we use to style each element. These
-                                classes control the overall appearance, as well as the showing and hiding via CSS
-                                transitions. You can modify any of this with custom CSS or overriding our default variables.
-                                It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Accordion Item #2
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <strong>This is the second item's accordion body.</strong> It is hidden by default, until
-                                the collapse plugin adds the appropriate classes that we use to style each element. These
-                                classes control the overall appearance, as well as the showing and hiding via CSS
-                                transitions. You can modify any of this with custom CSS or overriding our default variables.
-                                It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingThree">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Accordion Item #3
-                            </button>
-                        </h2>
-                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                                collapse plugin adds the appropriate classes that we use to style each element. These
-                                classes control the overall appearance, as well as the showing and hiding via CSS
-                                transitions. You can modify any of this with custom CSS or overriding our default variables.
-                                It's also worth noting that just about any HTML can go within the
-                                <code>.accordion-body</code>, though the transition does limit overflow.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <h2>Frequently Asked Question</h2>
-
-
-                    <div class="card" style="margin-top: 0px;">
-                        <div class="card-body">
-                            <h4 class="card-title">Mobil disini kualitas seperti apa?</h4>
-                            <p class="card-text">"Some quick example text to build on the card title and make up the bulk
-                                of the card's content."</p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-top: 20px;">
-                        <div class="card-body">
-                            <h4 class="card-title">Mobil disini kualitas seperti apa?</h4>
-                            <p class="card-text">"Some quick example text to build on the card title and make up the bulk
-                                of the card's content."</p>
-                        </div>
-                    </div>
-
-                    <div class="card" style="margin-top: 20px;">
-                        <div class="card-body">
-                            <h4 class="card-title">Mobil disini kualitas seperti apa?</h4>
-                            <p class="card-text">"Some quick example text to build on the card title and make up the bulk
-                                of the card's content."</p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div> --}}
 @endsection
