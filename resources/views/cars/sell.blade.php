@@ -11,9 +11,9 @@
 <div class="main-content"> <!-- New flex container -->
     <div class="px-5">
         <div class="row justify-items-center my-3 pb-2">
-            <h2 class="border-bottom col-md-4 ">Jual Mobilmu</h2>
+            <h2 class="border-bottom col-md-4 ">Sell Car</h2>
             <h2 class=" col-md-2 "></h2>
-            <h2 class="border-bottom col-md-4 ml-3">Daftar Penjualan</h2>
+            <h2 class="border-bottom col-md-4 ml-3">Selling List</h2>
         </div>
     </div>
     <div class="containers pb-5 px-5">
@@ -36,18 +36,18 @@
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="type">Tipe</label>
+                                <label for="type">Type</label>
                                 <select class="form-control" id="type" name="type" required disabled>
                                     <option value="">Type</option>
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="color">Warna</label>
+                                <label for="color">Color</label>
                                 <select class="form-control" id="color" name="color">
-                                    <option value="Hitam">Hitam</option>
-                                    <option value="Putih">Putih</option>
-                                    <option value="Merah">Merah</option>
-                                    <option value="Biru">Biru</option>
+                                    <option value="Hitam">Black</option>
+                                    <option value="Putih">White</option>
+                                    <option value="Merah">Red</option>
+                                    <option value="Biru">Blue</option>
                                 </select>
                             </div>
                             <div class="mb-4">
@@ -74,14 +74,14 @@
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="transmission">Transmisi</label>
+                                <label for="transmission">Transmission</label>
                                 <select class="form-control" id="transmission" name="transmission">
                                     <option value="Manual">Manual</option>
-                                    <option value="Automatic">Otomatis</option>
+                                    <option value="Automatic">Automatic</option>
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="location">Lokasi</label>
+                                <label for="location">Location</label>
                                 <select class="form-control" id="location" name="location">
                                     <option value="Jakarta">Jakarta</option>
                                     <option value="Bogor">Bogor</option>
@@ -90,7 +90,7 @@
                                 </select>
                             </div>
                             <div class="mb-4">
-                                <label for="year">Tahun</label>
+                                <label for="year">Year</label>
                                 <select class="form-control" id="year" name="year">
                                     <option value="2024">2024</option>
                                     <option value="2023">2023</option>
@@ -123,7 +123,6 @@
                                         <p class="card-text">{{ $car->color }} • {{ $car->mileage }} KM •
                                             {{ $car->transmission }} •
                                             {{ $car->location }}</p>
-                                        {{-- <p class="card-text">24.000KM • Manual • Jakarta</p> --}}
                                         <p class="card-text text-success font-weight-bold">{{ $car->status }}</p>
                                     </div>
                                 </div>

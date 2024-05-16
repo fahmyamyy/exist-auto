@@ -189,8 +189,8 @@
                                 @else
                                     <div class="card shadow-sm" style="width: 20rem;">
                                         <a href="">
-                                            <img style="max-height: 212px" class="card-img-top" {{-- src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg" --}}
-                                                src="https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510"
+                                            <img style="max-height: 212px; min-height: 212px" class="card-img-top" {{-- src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg" --}}
+                                                src="https://carwow-uk-wp-3.imgix.net/18015-MC20BluInfinito-scaled-e1707920217641.jpg?auto=format&cs=tinysrgb&fit=clip&ixlib=rb-1.1.0&q=10&w=800"
                                                 alt="Card image cap">
                                         </a>
                                         <ul class="list-group list-group-flush">

@@ -138,8 +138,8 @@
                         @else
                             <div class="card shadow-sm filtered m-2" style="width: 25rem;">
                                 <a href="">
-                                    <img style="max-height: 232px" class="card-img-top" alt="Car image cap"
-                                        src="https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510">
+                                    <img style="max-height: 232px; min-height: 232px" class="card-img-top" alt="Car image cap"
+                                        src="https://carwow-uk-wp-3.imgix.net/18015-MC20BluInfinito-scaled-e1707920217641.jpg?auto=format&cs=tinysrgb&fit=clip&ixlib=rb-1.1.0&q=10&w=800">
                                 </a>
                                 <ul class="list-group list-group-flush">
                                     <div class="p-4">

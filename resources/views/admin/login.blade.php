@@ -35,7 +35,7 @@
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block" style="background-image: url(https://lh3.googleusercontent.com/p/AF1QipP1-ORgxESW4w9Sb1eQnnGqEXZ-nZPdWHpbrYj_=s680-w680-h510); background-size: cover; background-position: center;"></div>
+                            <div class="col-lg-6 d-none d-lg-block" style="background-image: url(https://carwow-uk-wp-3.imgix.net/18015-MC20BluInfinito-scaled-e1707920217641.jpg?auto=format&cs=tinysrgb&fit=clip&ixlib=rb-1.1.0&q=10&w=800); background-size: cover; background-position: center;"></div>
                             <div class="col-lg-6">
                                 <div class="p-5">
                                     <div class="text-center">
