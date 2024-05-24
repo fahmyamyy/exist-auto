@@ -16,7 +16,7 @@
                                     alt="Image {{ $loop->iteration }}" data-bs-toggle="modal" data-bs-target="#imageModal"
                                     onclick="showImageInModal('{{ asset('storage/uploads/' . $upload->file_name . '.' . $upload->file_type) }}')">
                                 <button type="button" class="delete-button"
-                                    onclick="deleteImage('{{ $upload->id }}')">X</button>
+                                    onclick="deleteCarImage('{{ $upload->id }}')">X</button>
                             </div>
                         @endforeach
 
@@ -322,8 +322,8 @@
                 });
         }
 
-        function deleteImage(imageId) {
-            if (confirm('Are you sure you want to delete this image?')) {
+        function deleteCarImage(imageId) {
+            if (confirm('Are you sure you want to delete this photo?')) {
                 fetch(`/uploads/${imageId}`, {
                         method: 'DELETE',
                         headers: {
@@ -334,10 +334,10 @@
                         if (response.ok) {
                             location.reload();
                         } else {
-                            console.error('Failed to delete the image.');
+                            console.error('Failed to delete the photo.');
                         }
                     })
-                    .catch(error => console.error('Error deleting image:', error));
+                    .catch(error => console.error('Error deleting photo:', error));
             }
         }
     </script>

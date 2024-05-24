@@ -17,6 +17,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
+                                <th>Seller</th>
                                 <th>Brand</th>
                                 <th>Model</th>
                                 <th>Year</th>
@@ -35,7 +36,7 @@
                                 @foreach ($carData as $car)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $car->carModel->carBrand->brand }}</td>
+                                        <td>{{ $car->creator->name }}</td>
                                         <td>{{ $car->carModel->model }}</td>
                                         <td>{{ $car->year }}</td>
                                         <td>{{ $car->mileage }}</td>

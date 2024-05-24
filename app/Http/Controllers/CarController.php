@@ -73,6 +73,7 @@ class CarController extends Controller
         $carData = Car::where('seller', Auth::user()->id)
             ->orderBy('created_at')
             ->paginate(3);
+        $this->getCoverPhotos($carData);
         return view('cars.sell', compact('carBrands', 'carData'));
     }
 
