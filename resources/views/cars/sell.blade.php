@@ -113,9 +113,15 @@
                                 style="text-decoration: none; cursor: pointer; color: black;">
                                 <div class="row g-0 align-items-center"> <!-- Ensure content is vertically centered -->
                                     <div class="col-auto"> <!-- Use col-auto to fit the content's width -->
-                                        <img src="{{ asset('storage/uploads/' . $car->image->file_name . '.' . $car->image->file_type) }}"
-                                            class="img-fluid ml-4 border" alt="Card image cap"
-                                            style="max-width: 100px; height: auto; object-fit: cover;">
+                                        @if ($car->image != null)
+                                            <img src="{{ asset('storage/uploads/' . $car->image->file_name . '.' . $car->image->file_type) }}"
+                                                class="img-fluid ml-4 border" alt="Card image cap"
+                                                style="max-width: 100px; height: auto; object-fit: cover;">
+                                        @else
+                                            <img src="https://via.placeholder.com/100x100" class="img-fluid ml-4 border"
+                                                alt="Card image cap"
+                                                style="max-width: 100px; height: auto; object-fit: cover;">
+                                        @endif
                                     </div>
                                     <div class="col my-2">
                                         <div class="card-body row">
