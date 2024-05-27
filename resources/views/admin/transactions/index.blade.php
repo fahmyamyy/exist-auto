@@ -19,6 +19,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Car</th>
+                                <th>Seller</th>
                                 <th>Buyer</th>
                                 <th>Amount</th>
                                 <th>Transaction Type</th>
@@ -34,6 +35,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $transaction->car->carModel->carBrand->brand }}
                                         {{ $transaction->car->carModel->model }} {{ $transaction->car->year }}</td>
+                                    <td>{{ $transaction->car->creator->name }}</td>
                                     <td>{{ $transaction->buyer->name }}</td>
                                     <td>{{ $transaction->transaction_type }}</td>
                                     <td>{{ $transaction->amount }}</td>

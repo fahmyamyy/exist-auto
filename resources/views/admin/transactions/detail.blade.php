@@ -51,6 +51,11 @@
                                         required>
                                 </div>
                                 <div class="mb-4">
+                                    <label for="color">Seller</label>
+                                    <input type="text" class="form-control" name="seller" id="seller"
+                                        value="{{ $transaction->car->creator->name }}" required>
+                                </div>
+                                <div class="mb-4">
                                     <label for="color">Buyer</label>
                                     <input type="text" class="form-control" name="buyer" id="buyer"
                                         value="{{ $transaction->buyer->name }}" required>
