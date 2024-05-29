@@ -77,9 +77,15 @@
                                 @if ($car)
                                     <div class="card shadow-sm" style="width: 20rem;">
                                         <a href="{{ route('car.detail', ['carId' => $car->id]) }}">
-                                            <img style="max-height: 212px" class="card-img-top"
-                                                src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg"
-                                                alt="Card image cap">
+                                            @if ($car->image != null)
+                                                <img style="max-height: 212px" class="card-img-top"
+                                                    src="{{ asset('storage/uploads/' . $car->image->file_name . '.' . $car->image->file_type) }}"
+                                                    alt="Card image cap">
+                                            @else
+                                                <img style="max-height: 212px" class="card-img-top"
+                                                    src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg"
+                                                    alt="Card image cap">
+                                            @endif
                                         </a>
                                         <ul class="list-group list-group-flush">
                                             <div class="p-4">
@@ -111,7 +117,8 @@
                                 @else
                                     <div class="card shadow-sm" style="width: 20rem;">
                                         <a href="">
-                                            <img style="max-height: 212px; min-height: 212px" class="card-img-top" {{-- src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg" --}}
+                                            <img style="max-height: 212px; min-height: 212px" class="card-img-top"
+                                                {{-- src="https://digital-bucket.prod.bfi.co.id/assets/Blog/Blog%20New/Jenis%20Jenis%20Mobil%20dan%20Merk%20Mobil%20Terlaris%20di%20Indonesia/jenis_jenis_mobil_mobil_sedan%20(1).jpg" --}}
                                                 src="https://carwow-uk-wp-3.imgix.net/18015-MC20BluInfinito-scaled-e1707920217641.jpg?auto=format&cs=tinysrgb&fit=clip&ixlib=rb-1.1.0&q=10&w=800"
                                                 alt="Card image cap">
                                         </a>
@@ -173,21 +180,27 @@
                     <a href="#" onclick="event.preventDefault();" class="card-body"
                         style="text-decoration: none; cursor: pointer; color: black;">
                         <h5 class="card-title font-weight-bold">Forum Title</h5>
-                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus minus asperiores esse tenetur sint iusto debitis vitae.</p>
+                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus
+                            voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus
+                            minus asperiores esse tenetur sint iusto debitis vitae.</p>
                     </a>
                 </div>
                 <div class="card" style="width: 18rem;">
                     <a href="#" onclick="event.preventDefault();" class="card-body"
                         style="text-decoration: none; cursor: pointer; color: black;">
                         <h5 class="card-title font-weight-bold">Forum Title</h5>
-                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus minus asperiores esse tenetur sint iusto debitis vitae.</p>
+                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus
+                            voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus
+                            minus asperiores esse tenetur sint iusto debitis vitae.</p>
                     </a>
                 </div>
                 <div class="card" style="width: 18rem;">
                     <a href="#" onclick="event.preventDefault();" class="card-body"
                         style="text-decoration: none; cursor: pointer; color: black;">
                         <h5 class="card-title font-weight-bold">Forum Title</h5>
-                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus minus asperiores esse tenetur sint iusto debitis vitae.</p>
+                        <p class="card-text">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi delectus
+                            voluptates rem suscipit quidem cum voluptatem optio voluptatum atque dolores, ducimus natus
+                            minus asperiores esse tenetur sint iusto debitis vitae.</p>
                     </a>
                 </div>
             @endif
