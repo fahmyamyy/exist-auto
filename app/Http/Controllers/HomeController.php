@@ -27,6 +27,8 @@ class HomeController extends Controller
             ->orderBy('year', 'desc')
             ->orderBy('price_cash', 'asc')
             ->paginate(9);
+        $carController = new CarController();
+        $carController->getCoverPhotos($carData);
         return view('home', compact('carData', 'forumData'));
     }
 
