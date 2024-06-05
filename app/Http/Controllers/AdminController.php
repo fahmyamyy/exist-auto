@@ -272,6 +272,14 @@ class AdminController extends Controller
             $validator = Validator::make($request->all(), [
                 'fileInput.*' => 'image|mimes:jpeg,png,jpg|max:1024', // Max size: 1MB
             ]);
+    
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+    
+            if (!$request->hasFile('fileInput')) {
+                return redirect()->back()->with('error', 'Please select at least one photo to upload.');
+            }
             DB::beginTransaction();
             $car = Car::findOrFail($request->carId);
 
