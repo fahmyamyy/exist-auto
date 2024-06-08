@@ -106,9 +106,15 @@
                         @if ($car !== null)
                             <div class="card shadow-sm filtered m-2" style="width: 25rem;">
                                 <a href="{{ route('car.detail', ['carId' => $car->id]) }}">
-                                    <img style="max-height: 232px; min-height:232px" class="card-img-top"
-                                        alt="Car image cap"
-                                        src="{{ asset('storage/uploads/' . $car->image->file_name . '.' . $car->image->file_type) }}">
+                                    @if ($car->image != null) 
+                                        <img style="max-height: 232px; min-height:232px" class="card-img-top"
+                                            alt="Car image cap"
+                                            src="{{ asset('storage/uploads/' . $car->image->file_name . '.' . $car->image->file_type) }}">
+                                    @else
+                                        <img style="max-height: 232px; min-height:232px" class="card-img-top"
+                                            alt="Car image cap"
+                                            src="https://carwow-uk-wp-3.imgix.net/18015-MC20BluInfinito-scaled-e1707920217641.jpg?auto=format&cs=tinysrgb&fit=clip&ixlib=rb-1.1.0&q=10&w=800">
+                                    @endif
                                 </a>
                                 <ul class="list-group list-group-flush">
                                     <div class="p-4">
