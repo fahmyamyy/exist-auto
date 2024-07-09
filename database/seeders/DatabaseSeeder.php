@@ -3,9 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,46 +19,37 @@ class DatabaseSeeder extends Seeder
             'id' => Str::uuid(),
             'name' => 'admin',
             'email' => 'admin@admin.com',
-            'password' => '$2y$10$s3XtgG4VWEJpWRQvyEEXUul8XQ5bIPIioXqNIj1qCJF13UBmQeT4C',
+            'password' => Hash::make('123'),
+            // 'password' => '$2y$10$s3XtgG4VWEJpWRQvyEEXUul8XQ5bIPIioXqNIj1qCJF13UBmQeT4C',
             'role' => 'ADMIN',
+            'tanggal_lahir' => '2024-06-26',
+            'tempat_lahir' => 'ADMIN',
+            'umur' => 1,
+            'agama' => 'Lainnya',
+            'no_telp' => 0123,
+            'luas_lahan' => 0123,
+            'limit' => 123,
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ];
 
-        $carTypeMaster = [
-            ['type' => 'Sedan'],
-            ['type' => 'Hatchback'],
-            ['type' => 'MPV'],
-            ['type' => 'SUV'],
-            ['type' => 'Truk'],
-            ['type' => 'Coupe'],
-            ['type' => 'Van'],
-            ['type' => 'Wagon'],
-            ['type' => 'Mobil Atap Terbuka'],
+        $user = [
+            'id' => Str::uuid(),
+            'name' => 'Fahmy Malik',
+            'email' => 'fahmy.malikk@gmail.com',
+            'password' => Hash::make('123'),
+            'role' => 'USER',
+            'tanggal_lahir' => '2024-06-26',
+            'tempat_lahir' => 'ACEH',
+            'umur' => 1,
+            'agama' => 'Lainnya',
+            'no_telp' => 0123,
+            'luas_lahan' => 0123,
+            'limit' => 100000000,
+            'created_at' => Carbon::now()->toDateTimeString(),
+            'updated_at' => Carbon::now()->toDateTimeString()
         ];
-
-        $carBrandMaster = [
-            ['brand' => 'Toyota'],
-            ['brand' => 'Honda'],
-            ['brand' => 'Nissan'],
-            ['brand' => 'Porsche'],
-            ['brand' => 'Daihatsu'],
-            ['brand' => 'Suzuki'],
-            ['brand' => 'Audi'],
-        ];
-
-        $carModelMaster = [
-            ['model' => 'Brio', 'car_brand_id' => 2, 'car_type_id' => 1],
-            ['model' => 'Brio RS', 'car_brand_id' => 2, 'car_type_id' => 1],
-            ['model' => 'Brio Satya', 'car_brand_id' => 2, 'car_type_id' => 1],
-            ['model' => 'CR-V', 'car_brand_id' => 2, 'car_type_id' => 4],
-            ['model' => 'CR-V Turbo', 'car_brand_id' => 2, 'car_type_id' => 4],
-            ['model' => 'Supra', 'car_brand_id' => 1, 'car_type_id' => 1],
-        ];
-
         DB::table('users')->insert($admin);
-        DB::table('car_type')->insert($carTypeMaster);
-        DB::table('car_brand')->insert($carBrandMaster);
-        DB::table('car_model')->insert($carModelMaster);
+        DB::table('users')->insert($user);
     }
 }
