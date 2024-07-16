@@ -14,10 +14,16 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <input type="text" class="form-control" id="idUser" value="{{ $dataPinjaman->user->id }}"
+                            hidden>
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
-                            <input type="text" class="form-control" id="name" value="{{ Auth::user()->name }}"
-                                disabled>
+                            <input type="text" class="form-control" id="name"
+                                value="{{ $dataPinjaman->user->name }}"
+                                @if (Auth::user()->role === 'ADMIN') onclick="detailUser()" style="cursor: pointer"
+                                @else
+                                disabled @endif
+                                readonly>
                         </div>
                         <div class="mb-3">
                             <label for="jumlahPinjaman" class="form-label">Total Pinjaman</label>
@@ -30,10 +36,11 @@
                                 value="{{ $dataPinjaman->bank }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="tenor" class="form-label">Tenor</label>
-                            <input type="text" class="form-control" name="tenor" id="tenor"
-                                value="{{ $dataPinjaman->tenor }} Bulan" disabled>
+                            <label for="tipePinjaman" class="form-label">Tipe Pinjaman</label>
+                            <input type="text" class="form-control" name="tipePinjaman" id="tipePinjaman"
+                                value="{{ $dataPinjaman->tipe_pinjaman }}" disabled>
                         </div>
+
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -52,12 +59,37 @@
                                 value="{{ $dataPinjaman->no_rek }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="status" class="form-label">Status Pinjaman</label>
-                            <input type="text" class="form-control" name="status" id="status"
-                                value="{{ $dataPinjaman->status }}" disabled>
+                            <label for="tenor" class="form-label">Tenor</label>
+                            <input type="text" class="form-control" name="tenor" id="tenor"
+                                value="{{ $dataPinjaman->tenor }} Bulan" disabled>
                         </div>
-                    </div>
 
+                    </div>
+                    @if (Auth::user()->role === 'ADMIN')
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status Pinjaman</label>
+                                <input type="text" class="form-control" name="status" id="status"
+                                    value="{{ $dataPinjaman->status }}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="statusKelayakan" class="form-label">Status Kelayakan</label>
+                                <input type="text" class="form-control" name="statusKelayakan" id="statusKelayakan"
+                                    value="{{ $dataPinjaman->status_kelayakan }}" disabled>
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status Pinjaman</label>
+                                <input type="text" class="form-control" name="status" id="status"
+                                    value="{{ $dataPinjaman->status }}" disabled>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
             @if (Auth::user()->role === 'ADMIN' && $dataPinjaman->status === 'PENDING')
@@ -75,7 +107,7 @@
             @endif
         </div>
     </div>
-    @if (!in_array($dataPinjaman->status, ['PENDING', 'REJECTED']))
+    @if (!in_array($dataPinjaman->status, ['PENDING', 'REJECTED']) && $dataPinjaman->tipe_pinjaman != 'Potongan')
         <div class="row px-2">
             <div class="card shadow col-xl-12 col-md-12 mb-4">
                 <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
@@ -105,7 +137,9 @@
                                             <td class="align-middle">{{ $tagihan->total_tagihan }}</td>
                                             <td class="align-middle">{{ $tagihan->angsuran }} Dari
                                                 {{ $tagihan->pinjaman->tenor }}</td>
-                                            <td class="align-middle">{{ $tagihan->jatuh_tempo ? \Carbon\Carbon::parse($tagihan->jatuh_tempo)->format('d-m-Y') : '-' }}</td>
+                                            <td class="align-middle">
+                                                {{ $tagihan->jatuh_tempo ? \Carbon\Carbon::parse($tagihan->jatuh_tempo)->format('d-m-Y') : '-' }}
+                                            </td>
                                             <td class="align-middle">{{ $tagihan->status }}</td>
                                             <td class="text-center">
                                                 <a href="{{ route('tagihan.detail', ['tagihanId' => $tagihan->id]) }}">
@@ -133,3 +167,12 @@
         </div>
     @endif
 @endsection
+
+<script>
+    function detailUser() {
+        const userId = document.getElementById('idUser').value;
+        const url = '{{ route('admin.user.detail', ['userId' => ':userId']) }}'.replace(':userId',
+            userId);
+        window.location.href = url;
+    }
+</script>

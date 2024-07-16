@@ -22,7 +22,12 @@ return new class extends Migration
             $table->string('agama');
             $table->string('no_telp');
             $table->integer('luas_lahan');
-            $table->decimal('limit', 13, 2);
+            $table->string('status_perkawinan');
+            $table->string('status_keanggotaan');
+            $table->decimal('penghasilan_perbulan', 13, 2);
+            $table->decimal('penghasilan_panen', 13, 2);
+            $table->string('status_pinjaman');
+            $table->string('pinjaman_sebelumnya');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

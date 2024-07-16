@@ -120,6 +120,6 @@
                 });
         }
         updateDashboardData();
-        setInterval(updateDashboardData, 3000);
+        setInterval(updateDashboardData, 5000);
     });
 </script>

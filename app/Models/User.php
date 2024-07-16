@@ -28,7 +28,12 @@ class User extends Authenticatable
         'agama',
         'no_telp',
         'luas_lahan',
-        'limit'
+        'status_perkawinan',
+        'status_keanggotaan',
+        'penghasilan_perbulan',
+        'penghasilan_panen',
+        'status_pinjaman',
+        'pinjaman_sebelumnya',
     ];
 
     protected $casts = [
@@ -58,7 +63,12 @@ class User extends Authenticatable
         ];
     }
 
-    public function getLimitAttribute($value)
+    public function getPenghasilanPerbulanAttribute($value)
+    {
+        return 'Rp. ' . number_format($value, 0, ',', '.');
+    }
+
+    public function getPenghasilanPanenAttribute($value)
     {
         return 'Rp. ' . number_format($value, 0, ',', '.');
     }

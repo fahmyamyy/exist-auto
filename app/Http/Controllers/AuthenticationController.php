@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
-
-use App\Http\Controllers\Controller;
-use App\Models\User;
+use Exception;
 
 
 class AuthenticationController extends Controller
@@ -74,5 +73,20 @@ class AuthenticationController extends Controller
     {
         Auth::logout();
         return redirect()->route('login')->with('success', 'Logged out!');
+    }
+
+    public function changePassword(Request $request)
+    {
+        try {
+            $user = User::findOrFail($request->userId);
+            if ($request->password != $request->confirmPassword) {
+                throw new Exception('Password Not Match');
+            }
+            $user->password = Hash::make($request->password);
+            $user->save();
+            return redirect()->back()->with('success', 'Success change passowrd');
+        } catch (Exception $e) {
+            return redirect()->back()->with('error', 'Failed change passowrd: ' . $e->getMessage());
+        }
     }
 }

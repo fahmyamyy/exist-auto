@@ -15,9 +15,10 @@ class Pinjaman extends Model
         'bank',
         'no_rek',
         'tenor',
-        'pinjaman_pokok',
         'total_pinjaman',
-        'status'
+        'tipe_pinjaman',
+        'status',
+        'status_kelayakan'
     ];
 
     protected $casts = [
@@ -32,10 +33,5 @@ class Pinjaman extends Model
     public function getTotalPinjamanAttribute($value)
     {
         return 'Rp. ' . number_format($value, 0, ',', '.');
-    }
-    
-    public function getPinjamanPokokAttribute($value)
-    {
-        return 'Rp. ' . number_format($value, 0, ',', '.');
-    }
+    }    
 }

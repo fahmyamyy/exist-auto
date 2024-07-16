@@ -25,15 +25,16 @@
                                 value="{{ $tagihan->angsuran }} dari {{ $tagihan->pinjaman->tenor }} Bulan " disabled>
                         </div>
                         <div class="mb-3">
+                            <label for="tagihanPokok" class="form-label">Tagihan Pokok</label>
+                            <input type="text" class="form-control" name="tagihanPokok" id="tagihanPokok"
+                                value="{{ $tagihan->tagihan_pokok }}" disabled>
+                        </div>
+                        {{-- <div class="mb-3">
                             <label for="bunga" class="form-label">Bunga</label>
                             <input type="text" class="form-control" name="bunga" id="bunga"
                                 value="{{ $tagihan->bunga }}" disabled>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tunggakan" class="form-label">Tunggakan</label>
-                            <input type="text" class="form-control" name="tunggakan" id="tunggakan"
-                                value="{{ $tagihan->tunggakan }}" disabled>
-                        </div>
+                        </div> --}}
+                        
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -47,10 +48,13 @@
                             value="{{ $tagihan->jatuh_tempo ? \Carbon\Carbon::parse($tagihan->jatuh_tempo)->format('d-m-Y') : '-' }}" disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="tagihanPokok" class="form-label">Tagihan Pokok</label>
-                            <input type="text" class="form-control" name="tagihanPokok" id="tagihanPokok"
-                                value="{{ $tagihan->tagihan_pokok }}" disabled>
+                            <label for="tunggakan" class="form-label">Tunggakan</label>
+                            <input type="text" class="form-control" name="tunggakan" id="tunggakan"
+                                value="{{ $tagihan->tunggakan }}" disabled>
                         </div>
+                        
+                    </div>
+                    <div class="col-md-12">
                         <div class="mb-3">
                             <label for="totalTagihan" class="form-label">Total Tagihan</label>
                             <input type="text" class="form-control" name="totalTagihan" id="totalTagihan"

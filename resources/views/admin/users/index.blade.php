@@ -1,9 +1,11 @@
 @extends('components.layout')
+
 @section('heading')
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Users</h1>
     </div>
 @endsection
+
 @section('content')
     <!-- Content Row -->
     <div class="row px-2">
@@ -36,7 +38,10 @@
                                             <a href="{{ route('admin.user.detail', ['userId' => $user->id]) }}">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="#" class="delete-user-btn" data-toggle="modal" data-target="#deleteUserModal" data-name="{{ $user->name }}" data-email="{{ $user->email }}" data-no-telp="{{ $user->no_telp }}">
+                                            <a href="#" class="delete-user-btn" data-toggle="modal"
+                                                data-target="#deleteUserModal" data-user-id="{{ $user->id }}"
+                                                data-name="{{ $user->name }}" data-email="{{ $user->email }}"
+                                                data-no-telp="{{ $user->no_telp }}">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -79,12 +84,8 @@
                             <label for="email">Email</label>
                             <input type="email" class="form-control" id="email" name="email" disabled>
                         </div>
-                        {{-- <div class="form-group">
-                            <label for="nik">NIK</label>
-                            <input type="text" class="form-control" id="nik" name="nik" disabled>
-                        </div> --}}
                         <div class="form-group">
-                            <label for="no_telp">No. Telp</label>
+                            <label for="noTelp">No. Telp</label>
                             <input type="text" class="form-control" id="noTelp" name="noTelp" disabled>
                         </div>
                     </div>
@@ -102,20 +103,18 @@
             const deleteButtons = document.querySelectorAll('.delete-user-btn');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Get user data from data attributes
+                    const userId = this.getAttribute('data-user-id');
                     const name = this.getAttribute('data-name');
                     const email = this.getAttribute('data-email');
                     const noTelp = this.getAttribute('data-no-telp');
 
-                    // Populate modal form fields
                     document.getElementById('name').value = name;
                     document.getElementById('email').value = email;
                     document.getElementById('noTelp').value = noTelp;
 
-                    // Set the form action dynamically based on user ID
-                    const userId = this.dataset.userId; // Ensure you have this dataset in your HTML
                     const form = document.getElementById('deleteUserForm');
-                    form.action = "{{ route('admin.user.delete', ['userId' => ':userId']) }}".replace(':userId', userId);
+                    form.action = "{{ route('admin.user.delete', ['userId' => ':userId']) }}"
+                        .replace(':userId', userId);
                 });
             });
         });

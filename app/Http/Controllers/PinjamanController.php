@@ -2,11 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\JangkaWaktuEnum;
+use App\Enums\JenisPembayaranEnum;
+use App\Enums\LuasLahanEnum;
+use App\Enums\NilaiPinjamEnum;
+use App\Enums\PengahasilanEnum;
+use App\Enums\PengahasilanPanenEnum;
+use App\Enums\PinjamanSebelumnyaEnum;
+use App\Enums\StatusKeanggotaanEnum;
+use App\Enums\StatusKelayakanEnum;
+use App\Enums\StatusPerkawinanEnum;
+use App\Enums\StatusPinjamanEnum;
+use App\Enums\UsiaEnum;
 use App\Models\Pinjaman;
 use App\Models\Tagihan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Exception;
@@ -22,6 +35,7 @@ class PinjamanController extends Controller
     {
         $user = Auth::user();
         $status = $request->input('status');
+        $this->autoPotongPinjaman();
 
         if ($user->role === 'ADMIN') {
             $query = Pinjaman::orderBy('created_at');
@@ -47,14 +61,9 @@ class PinjamanController extends Controller
 
             $user = Auth::user();
             $cleanPinjaman = preg_replace('/\D/', '', $request->jumlahPinjaman);
-            $cleanLimit = preg_replace('/\D/', '', $user->limit);
 
-            if ($cleanLimit < $cleanPinjaman) {
-                throw new Exception('Pinjaman anda melebihi limit yang tersedia!');
-            }
-
-            $totalPinjaman = $cleanPinjaman * $request->tenor * 0.05;
-            $roundedTotalPinjaman = $cleanPinjaman + ceil($totalPinjaman / 1000) * 1000;
+            // $totalPinjaman = $cleanPinjaman * $request->tenor * 0.05;
+            // $roundedTotalPinjaman = $cleanPinjaman + ceil($totalPinjaman / 1000) * 1000;
 
             $idPinjaman = Str::uuid();
             $newPinjaman = Pinjaman::create([
@@ -64,9 +73,10 @@ class PinjamanController extends Controller
                 'bank' => $request->bank,
                 'no_rek' => $request->noRekening,
                 'tenor' => $request->tenor,
-                'pinjaman_pokok' => $cleanPinjaman,
-                'total_pinjaman' => $roundedTotalPinjaman,
-                'status' => 'PENDING'
+                'total_pinjaman' => $cleanPinjaman,
+                'tipe_pinjaman' => $request->tipePinjaman,
+                'status' => 'PENDING',
+                'status_kelayakan' => $this->hitungKelayakan($user, $cleanPinjaman, $request->tenor, $request->tipePinjaman)
             ]);
             $newPinjaman->save();
 
@@ -92,9 +102,12 @@ class PinjamanController extends Controller
                 $pinjaman->save();
 
                 $user = $pinjaman->user;
-                $user->limit = preg_replace('/\D/', '', $user->limit) - preg_replace('/\D/', '', $pinjaman->pinjaman_pokok);
                 $user->save();
-                $this->createTagihan($pinjamanId);
+                if ($pinjaman->tipe_pinjaman === 'Angsuran') {
+                    $tagihanController = new TagihanController();
+                    $tagihanController->createTagihan($pinjamanId);
+                    // $this->createTagihan($pinjamanId);
+                }
             }
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to ' . ucfirst(strtolower($request->action)) . ' Pinjaman: ' . $e->getMessage());
@@ -117,37 +130,76 @@ class PinjamanController extends Controller
         return view('pinjaman.detail', compact('dataPinjaman', 'dataTagihans'));
     }
 
-    public function createTagihan($pinjamanId)
+    public function autoPotongPinjaman()
     {
         try {
             DB::beginTransaction();
-            $pinjaman = Pinjaman::findOrFail($pinjamanId);
+            $dataPinjamans = Pinjaman::where('tipe_pinjaman', 'Potongan')
+                ->where('status', 'ON GOING')
+                ->get();
 
-            $cleanJumlahPinjaman = preg_replace('/\D/', '', $pinjaman->total_pinjaman);
-            $bunga = ceil($cleanJumlahPinjaman * 0.05 / 1000) * 1000;
-            $tagihan_pokok = ceil($cleanJumlahPinjaman / $pinjaman->tenor / 1000) * 1000;
+            foreach ($dataPinjamans as $pinjaman) {
+                $updatedAt = Carbon::parse($pinjaman->updated_at);
+                $paidDate = $updatedAt->addMonths($pinjaman->tenor);
 
-            for ($i = 1; $i <= $pinjaman->tenor; $i++) {
-                $jatuhTempo = $i === 1 ? Carbon::now()->addMonths(1)->day(27) : null;
-                $status = $i === 1 ? 'WAITING FOR PAYMENT' : 'PENDING';
-                $newTagihan = Tagihan::create([
-                    'id' => Str::uuid(),
-                    'pinjaman_id' => $pinjamanId,
-                    'angsuran' => $i,
-                    'tagihan_pokok' => $tagihan_pokok,
-                    'bunga' => $bunga,
-                    'tunggakan' => 0,
-                    'total_tagihan' => $tagihan_pokok + $bunga,
-                    'jatuh_tempo' => $jatuhTempo,
-                    'status' => $status
-                ]);
-                $newTagihan->save();
+                if (Carbon::now()->greaterThanOrEqualTo($paidDate)) {
+                    $pinjaman->status = 'PAID';
+                    $pinjaman->save();
+                }
             }
-
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+
+    public function hitungKelayakan($user, $nilaiPinjam, $jangkaWaktu, $jenisPinjaman)
+    {
+        try {
+            $cleanPenghasilanPerbulan = preg_replace('/\D/', '', $user->penghasilan_perbulan);
+            $cleanPenghasilanPanen = preg_replace('/\D/', '', $user->penghasilan_panen);
+
+            $usiaEnum = UsiaEnum::search($user->umur);
+            $statusPerkawinanEnum = StatusPerkawinanEnum::search($user->status_perkawinan);
+            $statusKeanggotaanEnum = StatusKeanggotaanEnum::search($user->status_keanggotaan);
+            $luasLahanEnum = LuasLahanEnum::search($user->luas_lahan);
+            $penghasilanEnum = PengahasilanEnum::search($cleanPenghasilanPerbulan / 1000000);
+            $penghasilanPanen = PengahasilanPanenEnum::search($cleanPenghasilanPanen / 1000000);
+            $nilaiPinjamEnum = NilaiPinjamEnum::search($nilaiPinjam / 1000000);
+            $jangkaWaktuEnum = JangkaWaktuEnum::search($jangkaWaktu);
+            $statusPinjamanEnum = StatusPinjamanEnum::search($user->status_pinjaman);
+            $jenisPinjamanEnum = JenisPembayaranEnum::search($jenisPinjaman);
+            $pinjamanSebelumnyaEnum = PinjamanSebelumnyaEnum::search($user->pinjaman_sebelumnya);
+
+            // Log::info('pinjem: ' . $nilaiPinjam / 1000000);
+            // Log::info('usiaEnum: ' . $usiaEnum->R1());
+            // Log::info('statusPerkawinanEnum: ' . $statusPerkawinanEnum->R1());
+            // Log::info('statusKeanggotaanEnum: ' . $statusKeanggotaanEnum->R1());
+            // Log::info('luasLahanEnum: ' . $luasLahanEnum->R1());
+            // Log::info('penghasilanEnum: ' . $penghasilanEnum->R1());
+            // Log::info('penghasilanPanen: ' . $penghasilanPanen->R1());
+            // Log::info('nilaiPinjamEnum: ' . $nilaiPinjamEnum->R1());
+            // Log::info('jangkaWaktuEnum: ' . $jangkaWaktuEnum->R1());
+            // Log::info('statusPinjamanEnum: ' . $statusPinjamanEnum->R1());
+            // Log::info('jenisPinjamanEnum: ' . $jenisPinjamanEnum->R1());
+            // Log::info('pinjamanSebelumnyaEnum: ' . $pinjamanSebelumnyaEnum->R1());
+
+            $r1Likehood = $usiaEnum->R1() * $statusPerkawinanEnum->R1() * $statusKeanggotaanEnum->R1() * $luasLahanEnum->R1() * $penghasilanEnum->R1() * $penghasilanPanen->R1() * $nilaiPinjamEnum->R1() * $jangkaWaktuEnum->R1() * $statusPinjamanEnum->R1() * $jenisPinjamanEnum->R1() * $pinjamanSebelumnyaEnum->R1() * StatusKelayakanEnum::R1();
+            $r2Likehood = $usiaEnum->R2() * $statusPerkawinanEnum->R2() * $statusKeanggotaanEnum->R2() * $luasLahanEnum->R2() * $penghasilanEnum->R2() * $penghasilanPanen->R2() * $nilaiPinjamEnum->R2() * $jangkaWaktuEnum->R2() * $statusPinjamanEnum->R2() * $jenisPinjamanEnum->R2() * $pinjamanSebelumnyaEnum->R2() * StatusKelayakanEnum::R2();
+            // Log::info('r1likehood: ' . $r1Likehood);
+            // Log::info('r2likehood: ' . $r2Likehood);
+
+            $nilaiProbabilitasR1 = $r1Likehood / ($r1Likehood + $r2Likehood);
+            $nilaiProbabilitasR2 = $r2Likehood / ($r1Likehood + $r2Likehood);
+            Log::info('nilaiProbabilitasR1: ' . $nilaiProbabilitasR1);
+            Log::info('nilaiProbabilitasR2: ' . $nilaiProbabilitasR2);
+
+            $hasil = $nilaiProbabilitasR1 > $nilaiProbabilitasR2 ? 'Layak' : 'Tidak Layak';
+            Log::info('hasil: ' . $hasil);
+
+            return $nilaiProbabilitasR1 > $nilaiProbabilitasR2 ? 'Layak' : 'Tidak Layak';
+        } catch (Exception $e) {
+            Log::info('Error hitung   ---   ' . $e->getMessage());
         }
     }
 }

@@ -17,38 +17,21 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nama</label>
-                                <input type="text" class="form-control alphabet-format" name="name" id="name" required>
+                                <input type="text" class="form-control alphabet-format" name="name" id="name"
+                                    required>
                             </div>
                             <div class="mb-3">
                                 <label for="noTelp" class="form-label">No. Telp</label>
-                                <input type="text" class="form-control number-format" name="noTelp" id="noTelp"
-                                    required>
+                                <input type="number" class="form-control" name="noTelp" id="noTelp" required>
                             </div>
                             <div class="mb-3">
                                 <label for="tempatLahir" class="form-label">Tempat Lahir</label>
                                 <select class="form-control" name="tempatLahir" id="tempatLahir" required>
                                     <option value="">--Tempat Lahir--</option>
+                                    @foreach (json_decode(file_get_contents('https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json')) as $tempat)
+                                        <option value="{{ $tempat->name }}">{{ $tempat->name }}</option>
+                                    @endforeach
                                 </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="luasLahan" class="form-label">Luas Lahan (ha)</label>
-                                <input type="text" class="form-control" name="luasLahan" id="luasLahan" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="Email" class="form-label">Email</label>
-                                <input type="email" id="email" name="email"
-                                    class="form-control @error('email') is-invalid @enderror" required>
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="tanggalLahir" class="form-label">Taggal Lahir</label>
-                                <input id="tanggalLahir" name="tanggalLahir" class="form-control" type="date" required>
                             </div>
                             <div class="mb-3">
                                 <label for="agama" class="form-label">Agama</label>
@@ -60,12 +43,54 @@
                                     <option value="Hindu">Hindu</option>
                                     <option value="Buddha">Buddha</option>
                                     <option value="Konghucu">Konghucu</option>
-                                    <option value="Lainnya">Lainnya</option>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="limit" class="form-label">Limit</label>
-                                <input type="text" class="form-control" name="limit" id="limit" disabled>
+                                <label for="statusKeanggotaan" class="form-label">Status Keanggotaan</label>
+                                <select class="form-control" name="statusKeanggotaan" id="statusKeanggotaan" required>
+                                    <option value="">--Status Keanggotaan--</option>
+                                    <option value="Pengurus">Pengurus</option>
+                                    <option value="Pengawas">Pengawas</option>
+                                    <option value="Anggota">Anggota</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="penghasilanPerbulan" class="form-label">Penghasilan Perbulan</label>
+                                <input type="text" class="form-control nominal-format" name="penghasilanPerbulan"
+                                    id="penghasilanPerbulan" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" id="email" name="email"
+                                    class="form-control @error('email') is-invalid @enderror" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="umur" class="form-label">Umur</label>
+                                <input type="text" class="form-control" name="umur" id="umur" disabled>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tanggalLahir" class="form-label">Tanggal Lahir</label>
+                                <input id="tanggalLahir" name="tanggalLahir" class="form-control" type="date" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="statusPerkawinan" class="form-label">Status Perkawinan</label>
+                                <select class="form-control" name="statusPerkawinan" id="statusPerkawinan" required>
+                                    <option value="">--Status Perkawinan--</option>
+                                    <option value="Menikah">Menikah</option>
+                                    <option value="Lajang">Lajang</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="luasLahan" class="form-label">Luas Lahan (ha)</label>
+                                <input type="text" class="form-control number-format" name="luasLahan" id="luasLahan"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="penghasilanPanen" class="form-label">Penghasilan Panen</label>
+                                <input type="text" class="form-control nominal-format" name="penghasilanPanen"
+                                    id="penghasilanPanen" required>
                             </div>
                         </div>
                     </div>
@@ -92,7 +117,19 @@
                 });
             })
             .catch(error => console.error('Error fetching provinces:', error));
-    });
 
-    
+        document.getElementById('tanggalLahir').addEventListener('change', function() {
+            let birthdate = this.value;
+            if (birthdate) {
+                let today = new Date();
+                let birthdateDate = new Date(birthdate);
+                let age = today.getFullYear() - birthdateDate.getFullYear();
+                let m = today.getMonth() - birthdateDate.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < birthdateDate.getDate())) {
+                    age--;
+                }
+                document.getElementById('umur').value = age;
+            }
+        });
+    });
 </script>

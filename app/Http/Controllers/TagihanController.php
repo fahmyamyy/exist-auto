@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PinjamanSebelumnyaEnum;
+use App\Enums\StatusPinjamanEnum;
 use App\Models\Pinjaman;
 use App\Models\Tagihan;
 use App\Models\Upload;
@@ -33,7 +35,7 @@ class TagihanController extends Controller
         $user = Auth::user();
 
         $now = Carbon::now();
-        $tanggalJatuhTempo = Carbon::now()->startOfMonth()->addDays(8);
+        $tanggalJatuhTempo = Carbon::now()->startOfMonth()->addDays(15);
 
         if ($now->greaterThan($tanggalJatuhTempo)) {
             $this->updateTunggakan();
@@ -49,11 +51,50 @@ class TagihanController extends Controller
                 $query->where('status', 'ON GOING');
             })
                 ->whereIn('status', ['WAITING FOR PAYMENT', 'REJECTED'])
-                // ->orderBy('created_at')
                 ->orderBy('updated_at', 'DESC')
                 ->paginate(5);
         }
         return view('tagihan.index', compact('user', 'dataTagihans'));
+    }
+
+    public function createTagihan($pinjamanId)
+    {
+        try {
+            DB::beginTransaction();
+            $pinjaman = Pinjaman::findOrFail($pinjamanId);
+            $user = $pinjaman->user;
+
+            $cleanJumlahPinjaman = preg_replace('/\D/', '', $pinjaman->total_pinjaman);
+            // $bunga = ceil($cleanJumlahPinjaman * 0.05 / 1000) * 1000;
+            $tagihan_pokok = ceil($cleanJumlahPinjaman / $pinjaman->tenor / 1000) * 1000;
+
+            for ($i = 1; $i <= $pinjaman->tenor; $i++) {
+                $jatuhTempo = $i === 1 ? Carbon::now()->addMonths(1)->day(27) : null;
+                $status = $i === 1 ? 'WAITING FOR PAYMENT' : 'PENDING';
+                $newTagihan = Tagihan::create([
+                    'id' => Str::uuid(),
+                    'pinjaman_id' => $pinjamanId,
+                    'angsuran' => $i,
+                    'tagihan_pokok' => $tagihan_pokok,
+                    // 'bunga' => $bunga,
+                    'tunggakan' => 0,
+                    'total_tagihan' => $tagihan_pokok,
+                    'jatuh_tempo' => $jatuhTempo,
+                    'status' => $status
+                ]);
+                $newTagihan->save();
+            }
+
+            if ($user->status_pinjaman === StatusPinjamanEnum::Baru->value) {
+                $user->status_pinjaman = StatusPinjamanEnum::PernahPinjam->value;
+                $user->save();
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+        }
     }
 
     public function updateStatusTagihan(Request $request, $tagihanId)
@@ -80,10 +121,6 @@ class TagihanController extends Controller
                     if ($pinjaman->tenor === $tagihan->angsuran) {
                         $pinjaman->status = 'PAID';
                         $pinjaman->save();
-
-                        $user = $pinjaman->user;
-                        $user->limit = preg_replace('/\D/', '', $user->limit) + preg_replace('/\D/', '', $pinjaman->pinjaman_pokok);
-                        $user->save();
                     }
                 }
             } else {
@@ -174,17 +211,21 @@ class TagihanController extends Controller
                 $totalTagihan = preg_replace('/\D/', '', $tagihan->total_tagihan);
                 $tunggakan = preg_replace('/\D/', '', $tagihan->tunggakan);
 
-                $tunggakanBulanIni = ($totalTagihan * 0.02);
+                $tunggakanBulanIni = ($totalTagihan * 0.0075); //Bunga tunggakan (bunga pokok(9%) / 12bulan) = 0.09 / 12 = 0.0075
 
                 $tagihan->tunggakan = $tunggakan + $tunggakanBulanIni;
                 $tagihan->total_tagihan = $totalTagihan + $tunggakanBulanIni;
                 $tagihan->jatuh_tempo = Carbon::now()->addMonths(1)->day(27);
                 $tagihan->save();
+
+                $user = $tagihan->pinjaman->user;
+                $user->pinjaman_sebelumnya = PinjamanSebelumnyaEnum::Macet;
+                $user->save();
             }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
             Log::info('Error update tunggakan   ---   ' . $e->getMessage());
         }
-    }
+    }    
 }

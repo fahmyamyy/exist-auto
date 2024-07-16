@@ -28,7 +28,12 @@ class DatabaseSeeder extends Seeder
             'agama' => 'Lainnya',
             'no_telp' => 0123,
             'luas_lahan' => 0123,
-            'limit' => 123,
+            'status_perkawinan' => 'Menikah',
+            'status_keanggotaan' => 'Pengurus',
+            'penghasilan_perbulan' => 2000000,
+            'penghasilan_panen' => 50000000,
+            'status_pinjaman' => 'Baru',
+            'pinjaman_sebelumnya' => 'Lancar',
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ];
@@ -42,14 +47,42 @@ class DatabaseSeeder extends Seeder
             'tanggal_lahir' => '2024-06-26',
             'tempat_lahir' => 'ACEH',
             'umur' => 1,
-            'agama' => 'Lainnya',
+            'agama' => 'Islam',
             'no_telp' => 0123,
             'luas_lahan' => 0123,
-            'limit' => 100000000,
+            'status_perkawinan' => 'Menikah',
+            'status_keanggotaan' => 'Pengurus',
+            'penghasilan_perbulan' => 2000000,
+            'penghasilan_panen' => 50000000,
+            'status_pinjaman' => 'Baru',
+            'pinjaman_sebelumnya' => 'Lancar',
+            'created_at' => Carbon::now()->toDateTimeString(),
+            'updated_at' => Carbon::now()->toDateTimeString()
+        ];
+
+        $userTest = [
+            'id' => Str::uuid(),
+            'name' => 'Suwanto',
+            'email' => 'wanto@gmail.com',
+            'password' => Hash::make('123'),
+            'role' => 'USER',
+            'tanggal_lahir' => '2024-06-26',
+            'tempat_lahir' => 'ACEH',
+            'umur' => 54,
+            'agama' => 'Lainnya',
+            'no_telp' => 0123,
+            'luas_lahan' => 4,
+            'status_perkawinan' => 'Menikah',
+            'status_keanggotaan' => 'Pengurus',
+            'penghasilan_perbulan' => 5000000,
+            'penghasilan_panen' => 160000000,
+            'status_pinjaman' => 'Baru',
+            'pinjaman_sebelumnya' => 'Macet',
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ];
         DB::table('users')->insert($admin);
         DB::table('users')->insert($user);
+        DB::table('users')->insert($userTest);
     }
 }

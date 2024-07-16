@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid('pinjaman_id');
             $table->integer('angsuran');
             $table->decimal('tagihan_pokok', 13, 2);
-            $table->decimal('bunga', 13, 2);
             $table->decimal('tunggakan', 13, 2)->nullable();
             $table->decimal('total_tagihan', 13, 2);
             $table->date('jatuh_tempo')->nullable();

@@ -15,7 +15,6 @@ class Tagihan extends Model
         'pinjaman_id',
         'angsuran',
         'tagihan_pokok',
-        'bunga',
         'tunggakan',
         'total_tagihan',
         'jatuh_tempo',
@@ -37,11 +36,6 @@ class Tagihan extends Model
     }
 
     public function getTagihanPokokAttribute($value)
-    {
-        return 'Rp. ' . number_format($value, 0, ',', '.');
-    }
-
-    public function getBungaAttribute($value)
     {
         return 'Rp. ' . number_format($value, 0, ',', '.');
     }

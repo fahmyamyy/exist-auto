@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('nama_pemilik_rekening');
             $table->string('bank');
             $table->string('no_rek');
-            $table->integer('tenor');
-            $table->decimal('pinjaman_pokok', 13, 2);
+            $table->integer('tenor')->nullable();
             $table->decimal('total_pinjaman', 13, 2);
+            $table->string('tipe_pinjaman');
             $table->string('status');
+            $table->string('status_kelayakan');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
