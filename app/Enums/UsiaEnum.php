@@ -11,18 +11,18 @@ enum UsiaEnum: string
     public function R1(): float
     {
         return match ($this) {
-            UsiaEnum::A => 0.6,
-            UsiaEnum::B => 0.5,
-            UsiaEnum::C => 0.733333333,
+            UsiaEnum::A => 0.5,
+            UsiaEnum::B => 0.466666667,
+            UsiaEnum::C => 0.619047619,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            UsiaEnum::A => 0.4,
-            UsiaEnum::B => 0.5,
-            UsiaEnum::C => 0.266666667,
+            UsiaEnum::A => 0.5,
+            UsiaEnum::B => 0.533333333,
+            UsiaEnum::C => 0.380952381,
         };
     }
 

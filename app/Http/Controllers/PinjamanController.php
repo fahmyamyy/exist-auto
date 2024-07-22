@@ -156,6 +156,7 @@ class PinjamanController extends Controller
     public function hitungKelayakan($user, $nilaiPinjam, $jangkaWaktu, $jenisPinjaman)
     {
         try {
+            Log::info('============ Hitung Kelayakan User ' . $user->name . ' ============');
             $cleanPenghasilanPerbulan = preg_replace('/\D/', '', $user->penghasilan_perbulan);
             $cleanPenghasilanPanen = preg_replace('/\D/', '', $user->penghasilan_panen);
 
@@ -171,33 +172,32 @@ class PinjamanController extends Controller
             $jenisPinjamanEnum = JenisPembayaranEnum::search($jenisPinjaman);
             $pinjamanSebelumnyaEnum = PinjamanSebelumnyaEnum::search($user->pinjaman_sebelumnya);
 
-            // Log::info('pinjem: ' . $nilaiPinjam / 1000000);
-            // Log::info('usiaEnum: ' . $usiaEnum->R1());
-            // Log::info('statusPerkawinanEnum: ' . $statusPerkawinanEnum->R1());
-            // Log::info('statusKeanggotaanEnum: ' . $statusKeanggotaanEnum->R1());
-            // Log::info('luasLahanEnum: ' . $luasLahanEnum->R1());
-            // Log::info('penghasilanEnum: ' . $penghasilanEnum->R1());
-            // Log::info('penghasilanPanen: ' . $penghasilanPanen->R1());
-            // Log::info('nilaiPinjamEnum: ' . $nilaiPinjamEnum->R1());
-            // Log::info('jangkaWaktuEnum: ' . $jangkaWaktuEnum->R1());
-            // Log::info('statusPinjamanEnum: ' . $statusPinjamanEnum->R1());
-            // Log::info('jenisPinjamanEnum: ' . $jenisPinjamanEnum->R1());
-            // Log::info('pinjamanSebelumnyaEnum: ' . $pinjamanSebelumnyaEnum->R1());
+            // Log::info('Usia R1: ' . $usiaEnum->R1());
+            // Log::info('Status Perkawinan R1: ' . $statusPerkawinanEnum->R1());
+            // Log::info('Status Keanggotaan R1: ' . $statusKeanggotaanEnum->R1());
+            // Log::info('Luas Lahan R1: ' . $luasLahanEnum->R1());
+            // Log::info('Penghasilan Perbulan R1: ' . $penghasilanEnum->R1());
+            // Log::info('Penghasilan Panen R1: ' . $penghasilanPanen->R1());
+            // Log::info('Nilai Pinjam R1: ' . $nilaiPinjamEnum->R1());
+            // Log::info('Jangka Waktu R1: ' . $jangkaWaktuEnum->R1());
+            // Log::info('Status Pinjaman R1: ' . $statusPinjamanEnum->R1());
+            // Log::info('Jenis Pinjaman R1: ' . $jenisPinjamanEnum->R1());
+            // Log::info('Pinjaman Sebelumnya R1: ' . $pinjamanSebelumnyaEnum->R1());
 
             $r1Likehood = $usiaEnum->R1() * $statusPerkawinanEnum->R1() * $statusKeanggotaanEnum->R1() * $luasLahanEnum->R1() * $penghasilanEnum->R1() * $penghasilanPanen->R1() * $nilaiPinjamEnum->R1() * $jangkaWaktuEnum->R1() * $statusPinjamanEnum->R1() * $jenisPinjamanEnum->R1() * $pinjamanSebelumnyaEnum->R1() * StatusKelayakanEnum::R1();
             $r2Likehood = $usiaEnum->R2() * $statusPerkawinanEnum->R2() * $statusKeanggotaanEnum->R2() * $luasLahanEnum->R2() * $penghasilanEnum->R2() * $penghasilanPanen->R2() * $nilaiPinjamEnum->R2() * $jangkaWaktuEnum->R2() * $statusPinjamanEnum->R2() * $jenisPinjamanEnum->R2() * $pinjamanSebelumnyaEnum->R2() * StatusKelayakanEnum::R2();
-            // Log::info('r1likehood: ' . $r1Likehood);
-            // Log::info('r2likehood: ' . $r2Likehood);
+            // Log::info('R1 Likehood: ' . $r1Likehood);
+            // Log::info('R2 Likehood: ' . $r2Likehood);
 
             $nilaiProbabilitasR1 = $r1Likehood / ($r1Likehood + $r2Likehood);
             $nilaiProbabilitasR2 = $r2Likehood / ($r1Likehood + $r2Likehood);
-            Log::info('nilaiProbabilitasR1: ' . $nilaiProbabilitasR1);
-            Log::info('nilaiProbabilitasR2: ' . $nilaiProbabilitasR2);
+            Log::info('Nilai Probabilitas R1 : ' . $nilaiProbabilitasR1);
+            Log::info('Nilai Probabilitas R2 : ' . $nilaiProbabilitasR2);
 
             $hasil = $nilaiProbabilitasR1 > $nilaiProbabilitasR2 ? 'Layak' : 'Tidak Layak';
-            Log::info('hasil: ' . $hasil);
-
-            return $nilaiProbabilitasR1 > $nilaiProbabilitasR2 ? 'Layak' : 'Tidak Layak';
+            Log::info('Hasil User ' . $user->name . ': ' . $hasil);
+            
+            return $hasil;
         } catch (Exception $e) {
             Log::info('Error hitung   ---   ' . $e->getMessage());
         }

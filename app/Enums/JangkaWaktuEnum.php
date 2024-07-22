@@ -11,8 +11,8 @@ enum JangkaWaktuEnum: string
     public function R1(): float
     {
         return match ($this) {
-            JangkaWaktuEnum::A => 0.444444444,
-            JangkaWaktuEnum::B => 0.764705882,
+            JangkaWaktuEnum::A => 0.352941176,
+            JangkaWaktuEnum::B => 0.736842105,
             JangkaWaktuEnum::C => 0.5,
         };
     }
@@ -20,8 +20,8 @@ enum JangkaWaktuEnum: string
     public function R2(): float
     {
         return match ($this) {
-            JangkaWaktuEnum::A => 0.555555556,
-            JangkaWaktuEnum::B => 0.235294118,
+            JangkaWaktuEnum::A => 0.647058824,
+            JangkaWaktuEnum::B => 0.263157895,
             JangkaWaktuEnum::C => 0.5,
         };
     }

@@ -11,18 +11,18 @@ enum StatusKeanggotaanEnum: string
     public function R1(): float
     {
         return match ($this) {
-            StatusKeanggotaanEnum::Pengurus => 0.75,
+            StatusKeanggotaanEnum::Pengurus => 0.6,
             StatusKeanggotaanEnum::Pengawas => 0.666666667,
-            StatusKeanggotaanEnum::Anggota => 0.608695652,
+            StatusKeanggotaanEnum::Anggota => 0.529411765,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            StatusKeanggotaanEnum::Pengurus => 0.25,
+            StatusKeanggotaanEnum::Pengurus => 0.4,
             StatusKeanggotaanEnum::Pengawas => 0.333333333,
-            StatusKeanggotaanEnum::Anggota => 0.391304348,
+            StatusKeanggotaanEnum::Anggota => 0.470588235,
         };
     }
 

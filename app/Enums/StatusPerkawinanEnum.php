@@ -10,16 +10,16 @@ enum StatusPerkawinanEnum: string
     public function R1(): float
     {
         return match ($this) {
-            StatusPerkawinanEnum::Menikah => 0.62962963,
-            StatusPerkawinanEnum::Lajang => 0.666666667,
+            StatusPerkawinanEnum::Menikah => 0.552631579,
+            StatusPerkawinanEnum::Lajang => 0.5,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            StatusPerkawinanEnum::Menikah => 0.37037037,
-            StatusPerkawinanEnum::Lajang => 0.333333333,
+            StatusPerkawinanEnum::Menikah => 0.447368421,
+            StatusPerkawinanEnum::Lajang => 0.5,
         };
     }
 

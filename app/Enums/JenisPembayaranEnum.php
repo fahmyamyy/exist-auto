@@ -10,16 +10,16 @@ enum JenisPembayaranEnum: string
     public function R1(): float
     {
         return match ($this) {
-            JenisPembayaranEnum::Angsuran => 0.733333333,
-            JenisPembayaranEnum::Potongan => 0.533333333,
+            JenisPembayaranEnum::Angsuran => 0.7,
+            JenisPembayaranEnum::Potongan => 0.409090909,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            JenisPembayaranEnum::Angsuran => 0.266666667,
-            JenisPembayaranEnum::Potongan => 0.466666667,
+            JenisPembayaranEnum::Angsuran => 0.3,
+            JenisPembayaranEnum::Potongan => 0.590909091,
         };
     }
 

@@ -11,18 +11,18 @@ enum LuasLahanEnum: string
     public function R1(): float
     {
         return match ($this) {
-            LuasLahanEnum::A => 0.533333333,
-            LuasLahanEnum::B => 0.7,
-            LuasLahanEnum::C => 0.8,
+            LuasLahanEnum::A => 0.5,
+            LuasLahanEnum::B => 0.538461538,
+            LuasLahanEnum::C => 0.833333333,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            LuasLahanEnum::A => 0.466666667,
-            LuasLahanEnum::B => 0.3,
-            LuasLahanEnum::C => 0.2,
+            LuasLahanEnum::A => 0.5,
+            LuasLahanEnum::B => 0.461538462,
+            LuasLahanEnum::C => 0.166666667,
         };
     }
 

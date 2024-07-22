@@ -11,18 +11,18 @@ enum PengahasilanEnum: string
     public function R1(): float
     {
         return match ($this) {
-            PengahasilanEnum::A => 0.470588235,
-            PengahasilanEnum::B => 0.571428571,
-            PengahasilanEnum::C => 0.375,
+            PengahasilanEnum::A => 0.571428571,
+            PengahasilanEnum::B => 0.5,
+            PengahasilanEnum::C => 0.6,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            PengahasilanEnum::A => 0.294117647,
-            PengahasilanEnum::B => 0.285714286,
-            PengahasilanEnum::C => 0.25,
+            PengahasilanEnum::A => 0.428571429,
+            PengahasilanEnum::B => 0.5,
+            PengahasilanEnum::C => 0.4,
         };
     }
 

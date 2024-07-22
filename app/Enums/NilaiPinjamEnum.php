@@ -11,18 +11,18 @@ enum NilaiPinjamEnum: string
     public function R1(): float
     {
         return match ($this) {
-            NilaiPinjamEnum::A => 0.882352941,
-            NilaiPinjamEnum::B => 0.272727273,
-            NilaiPinjamEnum::C => 0.5,
+            NilaiPinjamEnum::A => 0.826086957,
+            NilaiPinjamEnum::B => 0.214285714,
+            NilaiPinjamEnum::C => 0.2,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            NilaiPinjamEnum::A => 0.117647059,
-            NilaiPinjamEnum::B => 0.727272727,
-            NilaiPinjamEnum::C => 0.5,
+            NilaiPinjamEnum::A => 0.173913043,
+            NilaiPinjamEnum::B => 0.785714286,
+            NilaiPinjamEnum::C => 0.8,
         };
     }
 

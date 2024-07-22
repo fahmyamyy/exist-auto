@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\PinjamanController;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $pinjamanController = new PinjamanController();
         $admin = [
             'id' => Str::uuid(),
             'name' => 'admin',
@@ -37,6 +40,7 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ];
+        DB::table('users')->insert($admin);
 
         $user = [
             'id' => Str::uuid(),
@@ -59,9 +63,12 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ];
+        DB::table('users')->insert($user);
 
-        $userTest = [
-            'id' => Str::uuid(),
+        // User test 1
+        $userTestId1 = Str::uuid();
+        $userTest1 = [
+            'id' => $userTestId1,
             'name' => 'Suwanto',
             'email' => 'wanto@gmail.com',
             'password' => Hash::make('123'),
@@ -69,20 +76,76 @@ class DatabaseSeeder extends Seeder
             'tanggal_lahir' => '2024-06-26',
             'tempat_lahir' => 'ACEH',
             'umur' => 54,
-            'agama' => 'Lainnya',
+            'agama' => 'Islam',
             'no_telp' => 0123,
             'luas_lahan' => 4,
             'status_perkawinan' => 'Menikah',
             'status_keanggotaan' => 'Pengurus',
-            'penghasilan_perbulan' => 5000000,
-            'penghasilan_panen' => 160000000,
+            'penghasilan_perbulan' => '5000000',
+            'penghasilan_panen' => '160000000',
             'status_pinjaman' => 'Baru',
             'pinjaman_sebelumnya' => 'Macet',
             'created_at' => Carbon::now()->toDateTimeString(),
             'updated_at' => Carbon::now()->toDateTimeString()
         ];
-        DB::table('users')->insert($admin);
-        DB::table('users')->insert($user);
-        DB::table('users')->insert($userTest);
+        DB::table('users')->insert($userTest1);
+        $userTest1 = User::findOrFail($userTestId1);
+
+        $statusKelayakan1 = $pinjamanController->hitungKelayakan($userTest1, 61000000, 4 , 'Potongan');
+        $pinjamanTest1 = [
+            'id' => Str::uuid(),
+            'user_id' => $userTestId1,
+            'nama_pemilik_rekening' => 'test Suwanto',
+            'bank' => 'MANDIRI',
+            'no_rek' => '123',
+            'tenor' => '2',
+            'total_pinjaman' => '61000000',
+            'tipe_pinjaman' => 'Potongan',
+            'status' => 'PENDING',
+            'status_kelayakan' => $statusKelayakan1
+        ];
+        DB::table('pinjaman')->insert($pinjamanTest1);
+
+        //User Test 2
+        $userTestId2 = Str::uuid();
+        $userTest2 = [
+            'id' => $userTestId2,
+            'name' => 'Anita',
+            'email' => 'anita@gmail.com',
+            'password' => Hash::make('123'),
+            'role' => 'USER',
+            'tanggal_lahir' => '2024-06-26',
+            'tempat_lahir' => 'ACEH',
+            'umur' => 30,
+            'agama' => 'Islam',
+            'no_telp' => 0123,
+            'luas_lahan' => 3,
+            'status_perkawinan' => 'Lajang',
+            'status_keanggotaan' => 'Anggota',
+            'penghasilan_perbulan' => 3000000,
+            'penghasilan_panen' => 120000000,
+            'status_pinjaman' => 'Baru',
+            'pinjaman_sebelumnya' => 'Macet',
+            'created_at' => Carbon::now()->toDateTimeString(),
+            'updated_at' => Carbon::now()->toDateTimeString()
+        ];
+        DB::table('users')->insert($userTest2);
+        $userTest2 = User::findOrFail($userTestId2);
+
+        $statusKelayakan2 = $pinjamanController->hitungKelayakan($userTest2, 75000000, 6, 'Potongan');
+        $pinjamanTest2 = [
+            'id' => Str::uuid(),
+            'user_id' => $userTestId2,
+            'nama_pemilik_rekening' => 'test Anita',
+            'bank' => 'MANDIRI',
+            'no_rek' => '123',
+            'tenor' => '6',
+            'total_pinjaman' => '75000000',
+            'tipe_pinjaman' => 'Potongan',
+            'status' => 'PENDING',
+            'status_kelayakan' => $statusKelayakan2
+        ];
+        DB::table('pinjaman')->insert($pinjamanTest2);
+        
     }
 }

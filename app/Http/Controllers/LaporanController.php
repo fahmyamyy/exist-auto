@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Laporan;
 use App\Models\Pinjaman;
 use App\Models\Tagihan;
 use Illuminate\Http\Request;

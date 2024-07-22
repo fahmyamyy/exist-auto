@@ -10,16 +10,16 @@ enum PinjamanSebelumnyaEnum: string
     public function R1(): float
     {
         return match ($this) {
-            PinjamanSebelumnyaEnum::Lancar => 0.695652174,
-            PinjamanSebelumnyaEnum::Macet => 0.428571429,
+            PinjamanSebelumnyaEnum::Lancar => 0.6,
+            PinjamanSebelumnyaEnum::Macet => 0.416666667,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            PinjamanSebelumnyaEnum::Lancar => 0.304347826,
-            PinjamanSebelumnyaEnum::Macet => 0.571428571,
+            PinjamanSebelumnyaEnum::Lancar => 0.4,
+            PinjamanSebelumnyaEnum::Macet => 0.583333333,
         };
     }
 

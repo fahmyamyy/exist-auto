@@ -10,16 +10,16 @@ enum StatusPinjamanEnum: string
     public function R1(): float
     {
         return match ($this) {
-            StatusPinjamanEnum::Baru => 0.625,
-            StatusPinjamanEnum::PernahPinjam => 0.642857143,
+            StatusPinjamanEnum::Baru => 0.541666667,
+            StatusPinjamanEnum::PernahPinjam => 0.555555556,
         };
     }
 
     public function R2(): float
     {
         return match ($this) {
-            StatusPinjamanEnum::Baru => 0.375,
-            StatusPinjamanEnum::PernahPinjam => 0.357142857,
+            StatusPinjamanEnum::Baru => 0.458333333,
+            StatusPinjamanEnum::PernahPinjam => 0.444444444,
         };
     }
 
